@@ -1,28 +1,40 @@
+import { AccommodationResponse } from "@/types/accommodations";
 import Image from "next/image";
+import { COUNTRY_CURRENCY_MAP } from "../utils/currency";
 
-interface PropertyCardProps {
-  img: string;
-  location: string;
-  title: string;
-  description: string;
-  star: number;
-  price: string;
-  total: string;
-}
+type PropertyCardProps = Pick<
+  AccommodationResponse["data"][number],
+  | "images"
+  | "location"
+  | "title"
+  | "description"
+  | "rating"
+  | "price"
+  | "country"
+>;
 
 export default function PropertyCard({
-  img,
+  images,
   location,
   title,
   description,
-  star,
+  rating,
   price,
-  total,
+  country,
 }: PropertyCardProps) {
+  const defaultStayedDays = 2;
+  const totalPrice = price * defaultStayedDays;
+  const currency = COUNTRY_CURRENCY_MAP.get(country) || "$";
+
   return (
     <div className="cursor-pointer transition duration-200 ease-out text-black">
       <div className="relative h-52 w-full md:h-64 flex-shrink-0">
-        <Image src={img} alt={title} fill className="object-cover rounded-xl" />
+        <Image
+          src={images}
+          alt={title}
+          fill
+          className="object-cover rounded-xl"
+        />
       </div>
 
       <div className="flex flex-col flex-grow mt-2 p-2">
@@ -41,16 +53,20 @@ export default function PropertyCard({
                 clipRule="evenodd"
               />
             </svg>
-            <p className="text-sm pl-1">{star}</p>
+            <p className="text-sm pl-1">{rating}</p>
           </div>
         </div>
 
         <h4 className="text-base font-semibold mt-1 truncate">{title}</h4>
         <p className="text-sm text-gray-500 mt-1 line-clamp-2">{description}</p>
 
-        <div className="flex justify-between items-end pt-5">
-          <p className="text-lg font-semibold">{price}</p>
-          <p className="text-right text-sm text-gray-500">{total}</p>
+        <div className="flex gap-2 items-center pt-2">
+          <p className="text-lg font-semibold underline">
+            {currency} {totalPrice}
+          </p>
+          <p className="text-md text-gray-500">
+            For {defaultStayedDays} nights
+          </p>
         </div>
       </div>
     </div>

@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 export default function SearchBar() {
+  const dateNow = new Date().toISOString().split("T")[0];
   const [searchInput, setSearchInput] = useState("");
+  const [checkinDate, setCheckinDate] = useState("");
+  const [checkoutDate, setCheckoutDate] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
+  const router = useRouter();
+
+  const checkinInputRef = useRef<HTMLInputElement>(null);
+  const checkoutInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearchBarClick = () => {
     setIsExpanded(true);
@@ -12,6 +20,19 @@ export default function SearchBar() {
 
   const handleCloseClick = () => {
     setIsExpanded(false);
+  };
+
+  const onOpenDatePicker = (
+    inputRef: React.RefObject<HTMLInputElement | null>,
+  ) => {
+    if (!inputRef.current) return;
+    inputRef.current?.showPicker();
+  };
+
+  const handleSearch = () => {
+    router.push(
+      `/search?location=${searchInput}&checkin=${checkinDate}&checkout=${checkoutDate}`,
+    );
   };
 
   return (
@@ -99,7 +120,7 @@ export default function SearchBar() {
           <div className="flex flex-col space-y-4 mt-6">
             {/* Location */}
             <div className="border border-gray-300 rounded-xl p-4">
-              <p className="text-xs font-bold mb-1">Where</p>
+              <p className="text-xs text-black font-bold mb-1">Where</p>
               <input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -112,18 +133,18 @@ export default function SearchBar() {
             {/* Date Range */}
             <div className="flex space-x-2">
               <div className="border border-gray-300 rounded-xl p-4 flex-1">
-                <p className="text-xs font-bold mb-1">Check in</p>
+                <p className="text-xs text-black font-bold mb-1">Check in</p>
                 <p className="text-sm text-gray-400">Add dates</p>
               </div>
               <div className="border border-gray-300 rounded-xl p-4 flex-1">
-                <p className="text-xs font-bold mb-1">Check out</p>
+                <p className="text-xs text-black font-bold mb-1">Check out</p>
                 <p className="text-sm text-gray-400">Add dates</p>
               </div>
             </div>
 
             {/* Guests */}
             <div className="border border-gray-300 rounded-xl p-4">
-              <p className="text-xs font-bold mb-1">Who</p>
+              <p className="text-xs text-black font-bold mb-1">Who</p>
               <p className="text-sm text-gray-400">Add guests</p>
             </div>
 
@@ -139,7 +160,7 @@ export default function SearchBar() {
         <div className="flex flex-grow flex-row">
           {/* Location */}
           <div className="flex-grow px-4 py-2 border-r border-white cursor-pointer hover:bg-gray-100 rounded-full">
-            <p className="text-xs font-bold">Where</p>
+            <p className="text-xs font-bold text-black">Where</p>
             <input
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -150,26 +171,53 @@ export default function SearchBar() {
           </div>
 
           {/* Check-in */}
-          <div className="flex-grow px-4 py-2 border-r border-white cursor-pointer hover:bg-gray-100 rounded-full">
-            <p className="text-xs font-bold">Check in</p>
-            <p className="text-sm text-gray-400">Add dates</p>
+          <div
+            className="flex-grow px-4 py-2 border-r border-white cursor-pointer hover:bg-gray-100 rounded-full"
+            onClick={() => onOpenDatePicker(checkinInputRef)}
+          >
+            <p className="text-xs font-bold text-black">Check in</p>
+            <input
+              ref={checkinInputRef}
+              value={checkinDate}
+              type="date"
+              className="outline-none text-sm placeholder-gray-400 text-gray-600 bg-transparent w-full cursor-pointer"
+              min={dateNow}
+              onChange={(e) => setCheckinDate(e.target.value)}
+              placeholder="Add dates"
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
 
           {/* Check-out */}
-          <div className="flex-grow px-4 py-2 border-r border-white cursor-pointer hover:bg-gray-100 rounded-full">
-            <p className="text-xs font-bold">Check out</p>
-            <p className="text-sm text-gray-400">Add dates</p>
+          <div
+            className="flex-grow px-4 py-2 border-r border-white cursor-pointer hover:bg-gray-100 rounded-full"
+            onClick={() => onOpenDatePicker(checkoutInputRef)}
+          >
+            <p className="text-xs font-bold text-black">Check out</p>
+            <input
+              ref={checkoutInputRef}
+              value={checkoutDate}
+              type="date"
+              className="outline-none text-sm placeholder-gray-400 text-gray-600 bg-transparent w-full cursor-pointer"
+              min={checkinDate || dateNow}
+              onChange={(e) => setCheckoutDate(e.target.value)}
+              placeholder="Add dates"
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
 
           {/* Guests */}
           <div className="flex-grow px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-full">
-            <p className="text-xs font-bold">Who</p>
+            <p className="text-xs font-bold text-black">Who</p>
             <p className="text-sm text-gray-400">Add guests</p>
           </div>
         </div>
 
         {/* Search button */}
-        <button className="bg-[#FF385C] p-3 rounded-full text-white ml-2 flex items-center">
+        <button
+          className="bg-[#FF385C] cursor-pointer p-3 rounded-full text-white ml-2 flex items-center"
+          onClick={handleSearch}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -184,6 +232,7 @@ export default function SearchBar() {
               d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
             />
           </svg>
+          Search
         </button>
       </div>
     </div>

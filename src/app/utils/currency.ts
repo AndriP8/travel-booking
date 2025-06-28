@@ -1,0 +1,17 @@
+export const COUNTRY_CURRENCY_MAP = new Map<string, string>([
+  ["US", "$"],
+  ["GB", "£"],
+  ["EU", "€"],
+  ["JP", "¥"],
+  ["CN", "¥"],
+  ["AU", "$"],
+  ["CA", "$"],
+  ["CH", "CHF"],
+  ["NZ", "$"],
+  ["ID", "Rp"],
+  ["SG", "$"],
+  ["MY", "RM"],
+  ["TH", "฿"],
+  ["KR", "₩"],
+  ["IN", "₹"],
+]);
