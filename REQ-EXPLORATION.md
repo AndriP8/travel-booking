@@ -56,7 +56,7 @@ Anyone can search and listing a accommodation, but only aunthenticated user can 
 
 Performance and SEO are critical. Hence server-side rendering is a must because of the performance and SEO benefits.
 
-### Single page application or Multiple page applicatino?
+### Single page application or Multiple page application?
 
 Because most of travel site using new tab for open the detail accommodation, so we can use multiple page application instead of single page application for better initial load performance
 
