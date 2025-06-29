@@ -1,9 +1,10 @@
-import { AccommodationResponse } from "@/types/accommodations";
+import { ListAccommodationResponse } from "@/types/accommodations";
 import Image from "next/image";
 import { COUNTRY_CURRENCY_MAP } from "../utils/currency";
 
 type PropertyCardProps = Pick<
-  AccommodationResponse["data"][number],
+  ListAccommodationResponse["data"][number],
+  | "id"
   | "images"
   | "location"
   | "title"
@@ -14,6 +15,7 @@ type PropertyCardProps = Pick<
 >;
 
 export default function PropertyCard({
+  id,
   images,
   location,
   title,
@@ -27,7 +29,12 @@ export default function PropertyCard({
   const currency = COUNTRY_CURRENCY_MAP.get(country) || "$";
 
   return (
-    <div className="cursor-pointer transition duration-200 ease-out text-black">
+    <a
+      href={`/rooms/${id}`}
+      rel="noreferrer"
+      target="_blank"
+      className="cursor-pointer transition duration-200 ease-out text-black"
+    >
       <div className="relative h-52 w-full md:h-64 flex-shrink-0">
         <Image
           src={images}
@@ -69,6 +76,6 @@ export default function PropertyCard({
           </p>
         </div>
       </div>
-    </div>
+    </a>
   );
 }

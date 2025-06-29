@@ -1,8 +1,8 @@
-import { AccommodationResponse } from "@/types/accommodations";
+import { ListAccommodationResponse } from "@/types/accommodations";
 import PropertyCard from "./PropertyCard";
 
 interface PropertyListProps {
-  properties: AccommodationResponse["data"];
+  properties: ListAccommodationResponse["data"];
 }
 
 export default function PropertyList({ properties }: PropertyListProps) {
@@ -17,6 +17,7 @@ export default function PropertyList({ properties }: PropertyListProps) {
           {properties.map((property) => (
             <PropertyCard
               key={property.id}
+              id={property.id}
               images={property.images}
               location={property.location}
               title={property.title}
